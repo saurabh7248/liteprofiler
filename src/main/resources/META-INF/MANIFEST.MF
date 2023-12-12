@@ -1,0 +1,3 @@
+Premain-Class: org.dexter.LiteProfilerAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true

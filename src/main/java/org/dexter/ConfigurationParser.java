@@ -13,9 +13,12 @@ public class ConfigurationParser {
     private String outputFilePath;
     private final BufferedReader bufferedReader;
 
+    private String listenerType;
+
     public ConfigurationParser(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
         classWiseMethodNames = new HashMap<>();
+        this.listenerType = null;
     }
 
     public ProfilingConfiguration parse() throws IOException {
@@ -24,9 +27,11 @@ public class ConfigurationParser {
                 parseProfilingConfiguration();
             } else if (line.equals("output-config")) {
                 parseOutputConfiguration();
+            } else if (line.startsWith("listener-type:")) {
+                listenerType = line.substring(14);
             }
         }
-        return new ProfilingConfiguration(classWiseMethodNames, outputFilePath);
+        return new ProfilingConfiguration(classWiseMethodNames, outputFilePath, listenerType);
     }
 
     private void parseProfilingConfiguration() throws IOException {
@@ -35,7 +40,7 @@ public class ConfigurationParser {
             if (line.equals("profile-config-end")) {
                 return;
             } else if (line.startsWith("class:")) {
-                className = line.substring(5);
+                className = line.substring(6);
             } else if (line.startsWith("method:")) {
                 classWiseMethodNames.computeIfAbsent(className, x -> new ArrayList<>()).add(line.substring(7));
             }
