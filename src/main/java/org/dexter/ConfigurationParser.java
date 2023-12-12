@@ -10,6 +10,7 @@ import java.util.Map;
 public class ConfigurationParser {
 
     private final Map<String, List<String>> classWiseMethodNames;
+    private String outputFilePath;
     private final BufferedReader bufferedReader;
 
     public ConfigurationParser(BufferedReader bufferedReader) {
@@ -25,7 +26,7 @@ public class ConfigurationParser {
                 parseOutputConfiguration();
             }
         }
-        return new ProfilingConfiguration(classWiseMethodNames,null);
+        return new ProfilingConfiguration(classWiseMethodNames, outputFilePath);
     }
 
     private void parseProfilingConfiguration() throws IOException {
@@ -36,13 +37,19 @@ public class ConfigurationParser {
             } else if (line.startsWith("class:")) {
                 className = line.substring(5);
             } else if (line.startsWith("method:")) {
-                classWiseMethodNames.computeIfAbsent(className,x->new ArrayList<>()).add(line.substring(7));
+                classWiseMethodNames.computeIfAbsent(className, x -> new ArrayList<>()).add(line.substring(7));
             }
         }
     }
 
-    private void parseOutputConfiguration() {
-
+    private void parseOutputConfiguration() throws IOException {
+        for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+            if (line.equals("output-config-end")) {
+                return;
+            } else if (line.startsWith("output-file-path:")) {
+                outputFilePath = line.substring(17);
+            }
+        }
     }
 
 

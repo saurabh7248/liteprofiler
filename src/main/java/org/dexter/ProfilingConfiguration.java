@@ -13,4 +13,12 @@ public class ProfilingConfiguration {
         this.outputLocation = outputLocation;
     }
 
+    public Map<String, List<String>> getClassWiseMethodNames() {
+        return classWiseMethodNames;
+    }
+
+    public String getOutputLocation() {
+        return outputLocation;
+    }
+
 }
